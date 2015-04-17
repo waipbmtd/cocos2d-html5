@@ -4,6 +4,8 @@ var MyLayer = cc.Layer.extend({
     helloLabel:null,
     sprite:null,
     _paddles:[],
+    _goldEggs:[],
+    _basket:null,
 
     init:function () {
 
@@ -40,20 +42,22 @@ var MyLayer = cc.Layer.extend({
         this.addChild(this.sprite, 0);
 
         //egg
+        this._goldEggs=[];
         var n_egg = 5;
         for (var i=0; i<n_egg; i++){
             var goldEgg = GoldEgg.eggWithTexture(cc.textureCache.addImage(s_GlodEgg ));
             var per_gap = (this.winSize.width - goldEgg.width*n_egg)/(n_egg+1);
             goldEgg.setInitPosition(cc.p((goldEgg.width + per_gap) * (i+0.5), this.winSize.height-5 - goldEgg.height/2));
             goldEgg.setVelocity(this._eggStartingVelocity);
+            this._goldEggs.push(goldEgg);
             this.addChild(goldEgg,1);           
         }
 
         //basket
-        basket = Basket.basketWithTexture(cc.textureCache.addImage(s_Basket));
-        basket.x = 20;
-        basket.y = 40;
-        this.addChild(basket);
+        this._basket = Basket.basketWithTexture(cc.textureCache.addImage(s_Basket));
+        this._basket.x = 20;
+        this._basket.y = 40;
+        this.addChild(this._basket);
 
         //paddle
         this._newScheduler = new cc.Scheduler();
@@ -70,7 +74,7 @@ var MyLayer = cc.Layer.extend({
             var paddle = Paddle.paddleWithTexture(paddleTexture);
             var per_gap = (this.winSize.width - paddle.width*n_paddle)/n_paddle;
             paddle.x = (paddle.width + per_gap) * i ;
-            paddle.y = this.winSize.height-100;
+            paddle.y = this.winSize.height-200;
 
             paddle.setActionManager(this._newActionManager);
             paddle.setScheduler(this._newScheduler);
@@ -82,7 +86,8 @@ var MyLayer = cc.Layer.extend({
 
         cc.director.getScheduler().scheduleUpdateForTarget(this._newScheduler, 0, false);
         this._newScheduler.scheduleUpdateForTarget(this._newActionManager, 0, false);
-        this.schedule(this.doStep);
+
+        this.schedule(this.doStep, 0.1);
     },
 
     onEnter:function() {
@@ -90,6 +95,20 @@ var MyLayer = cc.Layer.extend({
     },
 
     doStep:function (delta) {
+        for(var j =0; j< this._goldEggs.length; j++){
+            var t_goldEgg = this._goldEggs[j];
+            if(!t_goldEgg || !t_goldEgg.isMoving()){
+                continue;
+            }
+            for (var i = 0; i < this._paddles.length; i++) {
+                if (!this._paddles[i]){
+                    break;
+                }
+                if(t_goldEgg.collideWithPaddle(this._paddles[i])==false){
+                   t_goldEgg.checkFallInBasket(this._basket);    
+                }
+            }
+        }         
     },
 
     reNewEgg: function(child){
@@ -97,8 +116,14 @@ var MyLayer = cc.Layer.extend({
         goldEgg.setInitPosition(child.getInitPosition());
         goldEgg.setVelocity(this._eggStartingVelocity);
         this.removeChild(child);
+        var index = this._goldEggs.indexOf(child);
+        if (index > -1){
+            this._goldEggs.splice(index,1);
+        }
+        
         this.addChild(goldEgg,1);       
-    }
+        this._goldEggs.push(goldEgg);
+        }
 });
 
 var MyScene = cc.Scene.extend({
