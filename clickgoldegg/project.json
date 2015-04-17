@@ -1,0 +1,19 @@
+{
+    "debugMode" : 1,
+    "noCache": false,
+    "showFPS" : false,
+    "frameRate" : 60,
+    "id" : "gameCanvas",
+    "renderMode" : 0,
+    "engineDir":"../",
+
+    "modules" :  ["cocos2d", "extensions", "external"],
+
+    "jsList" : [
+        "src/Paddle.js",
+        "src/GoldEgg.js",
+        "src/Basket.js",
+        "src/resource.js",
+        "src/myApp.js"
+    ]
+}
