@@ -9,6 +9,8 @@ var TAG_GROSSINI = 5561;
 var TAG_SEQUENCE = 5562;
 var GOLDEGG_STATE_STOP = 5;
 var GOLDEGG_STATE_MOVED = 6;
+var GOLDEGG_STATE_COLLIDED = 7;
+var GOLDEGG_STATE_INBOX= 7;
 
 var GoldEgg = cc.Sprite.extend({
     _status:GOLDEGG_STATE_STOP,
@@ -19,9 +21,9 @@ var GoldEgg = cc.Sprite.extend({
         this._super();
         var size = cc.director.getWinSize();
         var move = cc.moveBy(2, cc.p(0, 60-size.height));
+        var rotate = cc.rotateBy(0.2,-90);
         var callback = cc.callFunc(this.stopAction, this);
-        var sequence = cc.sequence(move, callback);
-        sequence.tag = TAG_SEQUENCE;
+        var sequence = cc.sequence(move, rotate,callback);
 
         cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -65,12 +67,12 @@ var GoldEgg = cc.Sprite.extend({
             if ((this.y > midY) && (this.y <= (highY + this.radius()))) {
                 this.y = highY + this.radius();
                 hit = true;
-                angleOffset = Math.PI / 2;
-            } else if (this.y < midY && this.y >= lowY - this.radius()) {
-                this.y = lowY - this.radius();
-                hit = true;
-                angleOffset = -Math.PI / 2;
-            }
+            } 
+            // else if (this.y < midY && this.y >= lowY - this.radius()) {
+            //     this.y = lowY - this.radius();
+            //     hit = true;
+            //     angleOffset = -Math.PI / 2;
+            // }           
 
             if (hit) {
                 //got an collide(碰撞)
@@ -106,7 +108,7 @@ var GoldEgg = cc.Sprite.extend({
                 this.fallInBox();
             }else if( Math.abs(leftX - this.x)<this.radius()  || Math.abs(this.x -rightX) < this.radius()   ){
                 //(碰撞)
-                this.playCollide();   
+                this.playBoxCollide();   
             }           
         }
 
@@ -116,19 +118,33 @@ var GoldEgg = cc.Sprite.extend({
     //掉入篮子里
     fallInBox:function(){
         window.console.log("fallInBox");
-        if(this.parent){
+        if(this.parent && this.isMoving()){
             this.parent.reNewEgg(this);    
         }
+        this._status == GOLDEGG_STATE_INBOX; 
+    },
+
+    //got an collide(碰撞,floor and paddle)
+    playCollide:function(){
+        window.console.log("playCollide");
+        if(this.parent && this.isMoving()){
+            this.getActionManager().removeAllActionsFromTarget(this);
+
+            this.runAction(cc.sequence(cc.rotateBy(0.2,-90), cc.callFunc(this.stopAction, this)));
+            window.console.log("cc.rotateTo")
+        }
+        this._status == GOLDEGG_STATE_COLLIDED;
         
     },
 
-    //got an collide(碰撞)
-    playCollide:function(){
-        window.console.log("playCollide");
-        if(this.parent){
+    //collide box
+    playBoxCollide:function(){
+        this.stopAllActions();
+        window.console.log("playBoxCollide === ")
+        if (this.parent && this.isMoving()){
             this.parent.reNewEgg(this);
         }
-        
+        this._status == GOLDEGG_STATE_COLLIDED;        
     },
 
    stopAction:function () {

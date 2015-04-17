@@ -87,7 +87,7 @@ var MyLayer = cc.Layer.extend({
         cc.director.getScheduler().scheduleUpdateForTarget(this._newScheduler, 0, false);
         this._newScheduler.scheduleUpdateForTarget(this._newActionManager, 0, false);
 
-        this.schedule(this.doStep, 0.1);
+        this.schedule(this.doStep, 0.05);
     },
 
     onEnter:function() {
