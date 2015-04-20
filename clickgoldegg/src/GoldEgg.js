@@ -119,22 +119,23 @@ var GoldEgg = cc.Sprite.extend({
     fallInBox:function(){
         window.console.log("fallInBox");
         if(this.parent && this.isMoving()){
+            this._status == GOLDEGG_STATE_INBOX;
+            this.parent.updateScore(true);
             this.parent.reNewEgg(this);    
         }
-        this._status == GOLDEGG_STATE_INBOX; 
+         
     },
 
     //got an collide(碰撞,floor and paddle)
     playCollide:function(){
         window.console.log("playCollide");
         if(this.parent && this.isMoving()){
+            this._status == GOLDEGG_STATE_COLLIDED;
             this.getActionManager().removeAllActionsFromTarget(this);
 
             this.runAction(cc.sequence(cc.rotateBy(0.2,-90), cc.callFunc(this.stopAction, this)));
             window.console.log("cc.rotateTo")
         }
-        this._status == GOLDEGG_STATE_COLLIDED;
-        
     },
 
     //collide box
@@ -142,9 +143,10 @@ var GoldEgg = cc.Sprite.extend({
         this.stopAllActions();
         window.console.log("playBoxCollide === ")
         if (this.parent && this.isMoving()){
+            this._status == GOLDEGG_STATE_COLLIDED; 
             this.parent.reNewEgg(this);
         }
-        this._status == GOLDEGG_STATE_COLLIDED;        
+               
     },
 
    stopAction:function () {

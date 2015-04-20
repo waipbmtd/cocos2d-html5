@@ -5,6 +5,10 @@ var s_GlodEgg = "GoldEgg.png";
 var s_Basket = "Basket.jpg";
 var s_Paddle = "paddle.png";
 
+//fnt
+ var   arial_14_fnt = 'arial-14.fnt';
+ var   arial_14_png = 'arial-14.png';   
+
 var g_resources = [
     //image
     s_HelloWorld,
@@ -12,11 +16,14 @@ var g_resources = [
     s_CloseSelected,
     s_GlodEgg,
     s_Basket,
-    s_Paddle
+    s_Paddle,
+
 
     //plist
 
     //fnt
+    arial_14_fnt,
+    arial_14_png,   
 
     //tmx
 

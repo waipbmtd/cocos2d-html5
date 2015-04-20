@@ -6,6 +6,8 @@ var MyLayer = cc.Layer.extend({
     _paddles:[],
     _goldEggs:[],
     _basket:null,
+    lbScore:null,
+    _tmpScore:0,
 
     init:function () {
 
@@ -40,6 +42,19 @@ var MyLayer = cc.Layer.extend({
         this.sprite.setPosition(this.winSize.width / 2, this.winSize.height / 2);
         this.sprite.setScale(this.winSize.height / this.sprite.getContentSize().height);
         this.addChild(this.sprite, 0);
+
+
+        // score
+        this.lbScore = new cc.LabelBMFont("Score: 0", arial_14_fnt);
+        this.lbScore.attr({
+            anchorX: 1,
+            anchorY: 0,
+            x: this.winSize.width - 5,
+            y: this.winSize.height - 30,
+            scale: 1.5, 
+        });
+        this.lbScore.textAlign = cc.TEXT_ALIGNMENT_RIGHT;
+        this.addChild(this.lbScore, 1000);
 
         //egg
         this._goldEggs=[];
@@ -111,7 +126,7 @@ var MyLayer = cc.Layer.extend({
         }         
     },
 
-    reNewEgg: function(child){
+    reNewEgg: function(child, cached){
         goldEgg = GoldEgg.eggWithTexture(cc.textureCache.addImage(s_GlodEgg ));
         goldEgg.setInitPosition(child.getInitPosition());
         goldEgg.setVelocity(this._eggStartingVelocity);
@@ -123,7 +138,16 @@ var MyLayer = cc.Layer.extend({
         
         this.addChild(goldEgg,1);       
         this._goldEggs.push(goldEgg);
-        }
+
+
+        },
+
+    updateScore:function(cached){
+        if (cached==true){
+            this._tmpScore +=1;
+            this.lbScore.setString("Score: " + this._tmpScore);
+        }        
+    }
 });
 
 var MyScene = cc.Scene.extend({
