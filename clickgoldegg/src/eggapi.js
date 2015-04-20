@@ -2,7 +2,9 @@
     _.console = _.console || { log: $.noop },
     _.path = {
     // Base Root
-    root: _.location.protocol + '//' + _.location.host,
+//    root: _.location.protocol + '//' + _.location.host,
+//    root: "http://192.168.1.212:8081",
+    root: "http://192.168.1.180:8082",
 
     // Base webSocket
     // ws: 'ws://127.0.0.1:8082/' ,
@@ -20,22 +22,11 @@
         all_light_app :  '/webgame-server/webgame/actdefs',    //其他轻应用
         other_active_show: '/api/1/active/show', //在玩这个活动的所有秀场
 
-        //我画你猜
-        guess_subject : '/server-001-whnc/guess/subjects',    //获取所有题目的主题类型
-        guess_subject_questions : '/server-001-whnc/guess/questions',    //获取某个主题下面的题目
-        guess_commit_subject_question: '/server-001-whnc/guess/submit_question ' ,    //提交所选主题题目
-        guess_submit_drawing : '/server-001-whnc/submit_drawing ',    //秀主结束画图
-        guess_question_image: '/server-001-whnc/guess/image' ,    //获取图片数据
-        guess_subject_count: '/server-001-whnc/guess/show_join_count' ,    //秀主已完成该活动次数
-        guess_draw_status: '/server-001-whnc/guess/draw_status' ,    //秀主是否画完
-        guess_first_successer: '/server-001-whnc/guess/first_successer' , //第一个猜正确的用户
-        guess_player_count: '/server-001-whnc/guess/player_count', //参与用户数 
-        guessed_player_list : ' /server-001-whnc/guess/player_list', //最近参与猜的人
-        guess_draw_detail : '/server-001-whnc/guess/draw_detail ', //该你画我猜详细
-        guess_history_list : '/api/1/guess/history', //获取秀主历史你画我猜
-        guess_player_answer: '/server-001-whnc/guess/player_answer', //用户提交猜的答案
-        guess_act_draw_id:'/server-001-whnc/guess/show_ids', //根据发起人ID获取我画你猜流水ID和总活动ID
-        guess_ws : '/server-001-whnc/webGameServlet' //画图同步websocket
+        //接金蛋
+        goldegg_getPostion: "/server-006-jjd/webgame/jjd/getposition?callback=?", //获取位置
+        goldegg_postPostion:"/server-006-jjd/webgame/jjd/submitposition?callback=?",//提交位置
+        goldegg_postClickEgg: "/server-006-jjd/webgame/jjd/submitclickegg?callback=?", //获取位置
+        goldegg_getClickEgg:"/server-006-jjd/webgame/jjd/getclickegg?callback=?",//提交位置
 
     },
 
@@ -101,10 +92,43 @@
 
     });
 
-    $.light_app.cache_egg = function () {};
+    $.light_app.catch_egg = function () {};
 
-    $.extend($.light_app.cache_egg,{
- 
+    $.extend($.light_app.catch_egg,{
+        get_postion:function(options){
+            $.render_data({
+                url:_.path.root + _.api.goldegg_getPostion,
+                data:options.data,
+                success:options.success
+                })
+        },
+
+        post_postion:function(options){
+            $.render_data({
+                url:_.path.root + _.api.goldegg_postPostion,
+                data:options.data,
+                success:options.success,
+                error:options.error
+                })
+        },
+
+        post_click_egg:function(options){
+            $.render_data({
+                url:_.path.root + _.api.goldegg_postClickEgg,
+                data:options.data,
+                success:options.success,
+                error:options.error
+                })
+        },
+
+        get_click_egg:function(options){
+            $.render_data({
+                url:_.path.root + _.api.goldegg_getClickEgg,
+                data:options.data,
+                success:options.success,
+                error:options.error
+                })
+        } ,  
 
     })
 

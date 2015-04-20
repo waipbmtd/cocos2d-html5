@@ -23,6 +23,16 @@
     <script src="main.js"></script>
 </head>
 <body style="padding:0; margin: 0; background: #000;">
+<Script language="javascript">
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+        };
+    var g_uid = getQueryString("uid");
+    var g_sponsor = getQueryString("sponsor");
+    var g_isShower = g_uid == g_sponsor;
+</Script>
 <script src="src/jQuery.min.js"></script>
 <script src="src/eggapi.js"></script>
 <script src="res/loading.js"></script>

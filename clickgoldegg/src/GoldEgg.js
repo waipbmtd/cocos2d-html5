@@ -16,15 +16,10 @@ var GoldEgg = cc.Sprite.extend({
     _status:GOLDEGG_STATE_STOP,
     _velocity:cc.p(0,0),
     _radius:0,
+    _index:0,
 
     ctor:function(){
         this._super();
-        var size = cc.director.getWinSize();
-        var move = cc.moveBy(2, cc.p(0, 60-size.height));
-        var rotate = cc.rotateBy(0.2,-90);
-        var callback = cc.callFunc(this.stopAction, this);
-        var sequence = cc.sequence(move, rotate,callback);
-
         cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
             swallowTouches: true,
@@ -36,14 +31,27 @@ var GoldEgg = cc.Sprite.extend({
                 var rect = cc.rect(0, 0, s.width, s.height);
 
                 if (cc.rectContainsPoint(rect, locationInNode)) {       // 判断触摸点是否在按钮范围内
-                    target.runAction(sequence);
-                    target._status = GOLDEGG_STATE_MOVED;
+                     target.beClicked() ;  
                     return true;
                 }
                 return false;
             }          
           }, this);
        },
+
+    beClicked:function(){
+        if(g_isShower){
+            var size = cc.director.getWinSize();
+            var move = cc.moveBy(2, cc.p(0, 60-size.height));
+            var rotate = cc.rotateBy(0.2,-90);
+            var callback = cc.callFunc(this.stopAction, this);
+            var sequence = cc.sequence(move, rotate,callback);    
+            this.runAction(sequence);
+            this._status = GOLDEGG_STATE_MOVED;                   
+        }else{
+            this.parent.doSyncClickEgg(this)
+        }
+    },
 
     collideWithPaddle:function (paddle) {
         var paddleRect = paddle.rect();
@@ -175,6 +183,12 @@ var GoldEgg = cc.Sprite.extend({
     },
     getInitPosition:function(){
         return this.initP;
+    },
+    setIndex:function(index){
+        this._index = index;
+    },
+    getIndex:function(){
+        return this._index;
     },
     isMoving:function(){
         return this._status == GOLDEGG_STATE_MOVED;
