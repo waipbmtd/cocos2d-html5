@@ -79,8 +79,8 @@ var MyLayer = cc.Layer.extend({
         this.initPaddle();
 
         // this.scheduleUpdate();
-        this.schedule(this.doStep, 0.05);
-        this.schedule(this.doHttpSync, 0.05);
+        this.schedule(this.doStep, 0.06);
+        this.schedule(this.doHttpSync, 0.07);
     },
 
     initPaddle:function(){
@@ -196,7 +196,10 @@ var MyLayer = cc.Layer.extend({
             return;
         }
         $.light_app.catch_egg.post_click_egg({
-            data:{data:JSON.stringify({clicker:g_uid, egg_index:egg.getIndex()})},
+            data:{
+                uid:g_sponsor,
+                data:JSON.stringify({clicker:g_uid, egg_index:egg.getIndex()})
+            },
             success:function(data){
                 window.console.log("uid : " + g_uid + "   egg index : " + egg.getIndex());
             }
@@ -245,7 +248,7 @@ var MyLayer = cc.Layer.extend({
         }else{
             //listen postion for guest
          $.light_app.catch_egg.get_postion({
-                data:{uid:g_uid},
+                data:{uid:g_sponsor},
                 success:function(data){
                         window.cachepostion = data;
                         layer.apply_layer_data(data);

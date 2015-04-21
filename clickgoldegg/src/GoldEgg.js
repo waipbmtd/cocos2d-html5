@@ -31,7 +31,9 @@ var GoldEgg = cc.Sprite.extend({
                 var rect = cc.rect(0, 0, s.width, s.height);
 
                 if (cc.rectContainsPoint(rect, locationInNode)) {       // 判断触摸点是否在按钮范围内
-                     target.beClicked() ;  
+                    if(!g_isShower){
+                      target.beClicked() ;  
+                    }
                     return true;
                 }
                 return false;

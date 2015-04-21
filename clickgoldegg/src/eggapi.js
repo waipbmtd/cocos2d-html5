@@ -3,8 +3,8 @@
     _.path = {
     // Base Root
 //    root: _.location.protocol + '//' + _.location.host,
-//    root: "http://192.168.1.212:8081",
-    root: "http://192.168.1.180:8082",
+   root: "http://192.168.1.212:8081",
+    // root: "http://192.168.1.180:8082",
 
     // Base webSocket
     // ws: 'ws://127.0.0.1:8082/' ,
